@@ -151,6 +151,150 @@ The LawnPro Team`,
     body: `LawnPro Reminder: Your {{serviceType}} appointment is tomorrow, {{appointmentDate}} at {{appointmentTime}}. Weather: {{weatherForecast}}. Questions? Call (555) 123-4567.`,
     variables: ["serviceType", "appointmentDate", "appointmentTime", "weatherForecast"],
   },
+  {
+    id: "template-invoice-reminder-7-days-email",
+    name: "Invoice Reminder - 7 Days Before Due (Email)",
+    type: "email",
+    subject: "Reminder: Invoice #{{invoiceNumber}} due in 7 days",
+    body: `Dear {{customerName}},
+
+This is a friendly reminder that your invoice is due in 7 days.
+
+Invoice Details:
+Invoice Number: #{{invoiceNumber}}
+Amount Due: ${{ amountDue }}
+Due Date: {{dueDate}}
+Service: {{serviceDescription}}
+
+You can pay your invoice online at: {{paymentLink}}
+
+If you have any questions, please don't hesitate to contact us at (555) 123-4567.
+
+Thank you for your business!
+
+Best regards,
+The LawnPro Team`,
+    variables: ["customerName", "invoiceNumber", "amountDue", "dueDate", "serviceDescription", "paymentLink"],
+  },
+  {
+    id: "template-invoice-reminder-7-days-sms",
+    name: "Invoice Reminder - 7 Days Before Due (SMS)",
+    type: "sms",
+    body: `LawnPro: Invoice #{{invoiceNumber}} for ${{ amountDue }} is due {{dueDate}}. Pay online: {{paymentLink}} Questions? Call (555) 123-4567.`,
+    variables: ["invoiceNumber", "amountDue", "dueDate", "paymentLink"],
+  },
+  {
+    id: "template-invoice-reminder-due-today-email",
+    name: "Invoice Due Today (Email)",
+    type: "email",
+    subject: "Invoice #{{invoiceNumber}} is due today",
+    body: `Dear {{customerName}},
+
+Your invoice is due today. Please submit payment at your earliest convenience.
+
+Invoice Details:
+Invoice Number: #{{invoiceNumber}}
+Amount Due: ${{ amountDue }}
+Due Date: {{dueDate}}
+Service: {{serviceDescription}}
+
+You can pay your invoice online at: {{paymentLink}}
+
+If you have already submitted payment, please disregard this notice.
+
+Thank you for your prompt attention to this matter.
+
+Best regards,
+The LawnPro Team`,
+    variables: ["customerName", "invoiceNumber", "amountDue", "dueDate", "serviceDescription", "paymentLink"],
+  },
+  {
+    id: "template-invoice-reminder-due-today-sms",
+    name: "Invoice Due Today (SMS)",
+    type: "sms",
+    body: `LawnPro: Invoice #{{invoiceNumber}} for ${{ amountDue }} is due today. Pay now: {{paymentLink}} Questions? Call (555) 123-4567.`,
+    variables: ["invoiceNumber", "amountDue", "dueDate", "paymentLink"],
+  },
+  {
+    id: "template-invoice-overdue-3-days-email",
+    name: "Invoice Overdue - 3 Days (Email)",
+    type: "email",
+    subject: "OVERDUE: Invoice #{{invoiceNumber}} - Payment Required",
+    body: `Dear {{customerName}},
+
+Your invoice is now 3 days overdue. Please submit payment immediately to avoid any service interruptions.
+
+Invoice Details:
+Invoice Number: #{{invoiceNumber}}
+Amount Due: ${{ amountDue }}
+Original Due Date: {{dueDate}}
+Days Overdue: 3
+Service: {{serviceDescription}}
+
+You can pay your invoice online at: {{paymentLink}}
+
+If you are experiencing financial difficulties, please contact us at (555) 123-4567 to discuss payment arrangements.
+
+We appreciate your immediate attention to this matter.
+
+Best regards,
+The LawnPro Team`,
+    variables: ["customerName", "invoiceNumber", "amountDue", "dueDate", "serviceDescription", "paymentLink"],
+  },
+  {
+    id: "template-invoice-overdue-3-days-sms",
+    name: "Invoice Overdue - 3 Days (SMS)",
+    type: "sms",
+    body: `LawnPro OVERDUE: Invoice #{{invoiceNumber}} for ${{ amountDue }} is 3 days past due. Pay now: {{paymentLink}} Call (555) 123-4567.`,
+    variables: ["invoiceNumber", "amountDue", "dueDate", "paymentLink"],
+  },
+  {
+    id: "template-invoice-overdue-7-days-email",
+    name: "Invoice Overdue - 7 Days (Email)",
+    type: "email",
+    subject: "URGENT: Invoice #{{invoiceNumber}} - 7 Days Overdue",
+    body: `Dear {{customerName}},
+
+Your invoice is now 7 days overdue. This is an urgent notice requiring immediate payment.
+
+Invoice Details:
+Invoice Number: #{{invoiceNumber}}
+Amount Due: ${{ amountDue }}
+Original Due Date: {{dueDate}}
+Days Overdue: 7
+Service: {{serviceDescription}}
+Late Fee: ${{ lateFee }}
+Total Amount Due: ${{ totalAmountDue }}
+
+You can pay your invoice online at: {{paymentLink}}
+
+Please note that continued non-payment may result in:
+- Additional late fees
+- Suspension of services
+- Collection activities
+
+Please contact us immediately at (555) 123-4567 to resolve this matter.
+
+Best regards,
+The LawnPro Team`,
+    variables: [
+      "customerName",
+      "invoiceNumber",
+      "amountDue",
+      "dueDate",
+      "serviceDescription",
+      "lateFee",
+      "totalAmountDue",
+      "paymentLink",
+    ],
+  },
+  {
+    id: "template-invoice-overdue-7-days-sms",
+    name: "Invoice Overdue - 7 Days (SMS)",
+    type: "sms",
+    body: `LawnPro URGENT: Invoice #{{invoiceNumber}} is 7 days overdue. Total due: ${{ totalAmountDue }} (includes late fee). Pay: {{paymentLink}} Call NOW: (555) 123-4567.`,
+    variables: ["invoiceNumber", "totalAmountDue", "paymentLink"],
+  },
 ]
 
 // Mock notification preferences for customers
@@ -736,4 +880,182 @@ export async function testSMSProvider(config: SMSProviderConfig): Promise<{ succ
       message: `Error testing SMS provider: ${error instanceof Error ? error.message : String(error)}`,
     }
   }
+}
+
+// Invoice reminder settings interface
+export interface InvoiceReminderSettings {
+  enabled: boolean
+  reminderSchedule: {
+    beforeDue: {
+      enabled: boolean
+      days: number[]
+    }
+    onDueDate: {
+      enabled: boolean
+    }
+    afterDue: {
+      enabled: boolean
+      days: number[]
+    }
+  }
+  lateFees: {
+    enabled: boolean
+    amount: number
+    type: "fixed" | "percentage"
+    gracePeriodDays: number
+  }
+  escalation: {
+    enabled: boolean
+    finalNoticeDay: number
+    suspendServicesDay: number
+  }
+  customerExceptions: string[] // Customer IDs who are exempt from reminders
+}
+
+// Mock invoice reminder settings
+let invoiceReminderSettings: InvoiceReminderSettings = {
+  enabled: true,
+  reminderSchedule: {
+    beforeDue: {
+      enabled: true,
+      days: [7, 3, 1],
+    },
+    onDueDate: {
+      enabled: true,
+    },
+    afterDue: {
+      enabled: true,
+      days: [3, 7, 14],
+    },
+  },
+  lateFees: {
+    enabled: true,
+    amount: 25,
+    type: "fixed",
+    gracePeriodDays: 3,
+  },
+  escalation: {
+    enabled: true,
+    finalNoticeDay: 14,
+    suspendServicesDay: 30,
+  },
+  customerExceptions: [],
+}
+
+// Get invoice reminder settings
+export function getInvoiceReminderSettings(): InvoiceReminderSettings {
+  return invoiceReminderSettings
+}
+
+// Update invoice reminder settings
+export function updateInvoiceReminderSettings(settings: Partial<InvoiceReminderSettings>): InvoiceReminderSettings {
+  invoiceReminderSettings = { ...invoiceReminderSettings, ...settings }
+  return invoiceReminderSettings
+}
+
+// Send invoice reminder notification
+export async function sendInvoiceReminderNotification(
+  customerId: string,
+  customerName: string,
+  invoiceNumber: string,
+  amountDue: number,
+  dueDate: string,
+  serviceDescription: string,
+  daysUntilDue: number,
+  lateFee?: number,
+): Promise<NotificationHistory[]> {
+  const preferences = getCustomerNotificationPreferences(customerId)
+  const results: NotificationHistory[] = []
+
+  // Determine which template to use based on days until due
+  let emailTemplateId: string
+  let smsTemplateId: string
+
+  if (daysUntilDue > 0) {
+    // Before due date
+    if (daysUntilDue >= 7) {
+      emailTemplateId = "template-invoice-reminder-7-days-email"
+      smsTemplateId = "template-invoice-reminder-7-days-sms"
+    } else {
+      emailTemplateId = "template-invoice-reminder-7-days-email" // Use same template for now
+      smsTemplateId = "template-invoice-reminder-7-days-sms"
+    }
+  } else if (daysUntilDue === 0) {
+    // Due today
+    emailTemplateId = "template-invoice-reminder-due-today-email"
+    smsTemplateId = "template-invoice-reminder-due-today-sms"
+  } else {
+    // Overdue
+    const daysOverdue = Math.abs(daysUntilDue)
+    if (daysOverdue <= 3) {
+      emailTemplateId = "template-invoice-overdue-3-days-email"
+      smsTemplateId = "template-invoice-overdue-3-days-sms"
+    } else {
+      emailTemplateId = "template-invoice-overdue-7-days-email"
+      smsTemplateId = "template-invoice-overdue-7-days-sms"
+    }
+  }
+
+  const variables = {
+    customerName,
+    invoiceNumber,
+    amountDue: amountDue.toFixed(2),
+    dueDate: formatDateForNotification(dueDate),
+    serviceDescription,
+    paymentLink: `https://lawnpro.com/pay/${invoiceNumber}`,
+    lateFee: lateFee ? lateFee.toFixed(2) : "0.00",
+    totalAmountDue: (amountDue + (lateFee || 0)).toFixed(2),
+  }
+
+  // Send email if customer has opted in
+  if (preferences.email) {
+    try {
+      const emailResult = await sendNotification(customerId, customerName, emailTemplateId, variables)
+      results.push(emailResult)
+    } catch (error) {
+      console.error("Failed to send invoice reminder email:", error)
+    }
+  }
+
+  // Send SMS if customer has opted in
+  if (preferences.sms) {
+    try {
+      const smsResult = await sendNotification(customerId, customerName, smsTemplateId, variables)
+      results.push(smsResult)
+    } catch (error) {
+      console.error("Failed to send invoice reminder SMS:", error)
+    }
+  }
+
+  return results
+}
+
+// Check if invoice reminder should be sent
+export function shouldSendInvoiceReminder(invoiceId: string, dueDate: string, customerId: string): boolean {
+  const settings = getInvoiceReminderSettings()
+
+  if (!settings.enabled) return false
+  if (settings.customerExceptions.includes(customerId)) return false
+
+  const today = new Date()
+  const due = new Date(dueDate)
+  const daysUntilDue = Math.ceil((due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+
+  // Check if we should send reminder before due date
+  if (daysUntilDue > 0 && settings.reminderSchedule.beforeDue.enabled) {
+    return settings.reminderSchedule.beforeDue.days.includes(daysUntilDue)
+  }
+
+  // Check if we should send reminder on due date
+  if (daysUntilDue === 0 && settings.reminderSchedule.onDueDate.enabled) {
+    return true
+  }
+
+  // Check if we should send reminder after due date
+  if (daysUntilDue < 0 && settings.reminderSchedule.afterDue.enabled) {
+    const daysOverdue = Math.abs(daysUntilDue)
+    return settings.reminderSchedule.afterDue.days.includes(daysOverdue)
+  }
+
+  return false
 }

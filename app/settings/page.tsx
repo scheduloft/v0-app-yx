@@ -1,4 +1,15 @@
-import { Bell, ChevronRight, CreditCard, HelpCircle, LogOut, User, Route, Scissors, Package } from "lucide-react"
+import {
+  Bell,
+  ChevronRight,
+  CreditCard,
+  HelpCircle,
+  LogOut,
+  User,
+  Route,
+  Scissors,
+  Package,
+  Receipt,
+} from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -76,6 +87,29 @@ export default function SettingsPage() {
               <div className="flex items-center">
                 <Package className="h-4 w-4 mr-2 text-muted-foreground" />
                 <span>Service Packages</span>
+              </div>
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            </Link>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle>Invoicing & Payments</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Link href="/settings/invoice-reminders" className="flex items-center justify-between py-2">
+              <div className="flex items-center">
+                <Receipt className="h-4 w-4 mr-2 text-muted-foreground" />
+                <span>Invoice Reminders</span>
+              </div>
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            </Link>
+            <Separator />
+            <Link href="#" className="flex items-center justify-between py-2">
+              <div className="flex items-center">
+                <CreditCard className="h-4 w-4 mr-2 text-muted-foreground" />
+                <span>Payment Methods</span>
               </div>
               <ChevronRight className="h-4 w-4 text-muted-foreground" />
             </Link>
