@@ -52,8 +52,17 @@ export default function TodayPage() {
   return (
     <main className="flex flex-col pb-16">
       <div className="bg-primary text-primary-foreground p-4">
-        <h1 className="text-xl font-bold">Today's Route</h1>
-        <p className="text-sm opacity-90">Wednesday, June 13, 2025</p>
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-xl font-bold">Today's Route</h1>
+            <p className="text-sm opacity-90">Wednesday, June 13, 2025</p>
+          </div>
+          <Link href="/onboarding">
+            <Button size="sm" variant="secondary">
+              Setup Guide
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className="p-4">
