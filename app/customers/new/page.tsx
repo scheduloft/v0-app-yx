@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
+import { ServiceSelection } from "@/components/service-selection"
 
 export default function NewCustomerPage() {
   const router = useRouter()
@@ -26,6 +27,7 @@ export default function NewCustomerPage() {
     serviceFrequency: "",
     preferredDay: "",
     serviceType: "",
+    servicePackage: "",
   })
 
   const handleChange = (field, value) => {
@@ -33,6 +35,22 @@ export default function NewCustomerPage() {
       ...prev,
       [field]: value,
     }))
+  }
+
+  const handleServiceSelection = (type: "service" | "package", id: string) => {
+    if (type === "service") {
+      setCustomer((prev) => ({
+        ...prev,
+        serviceType: id,
+        servicePackage: "",
+      }))
+    } else {
+      setCustomer((prev) => ({
+        ...prev,
+        serviceType: "",
+        servicePackage: id,
+      }))
+    }
   }
 
   const handleSave = () => {
@@ -167,22 +185,22 @@ export default function NewCustomerPage() {
 
         <Card>
           <CardContent className="p-4 space-y-4">
-            <h2 className="font-semibold">Service Details</h2>
+            <h2 className="font-semibold">Service Plan</h2>
+            <p className="text-sm text-muted-foreground">
+              Choose either an individual service or a service package for this customer.
+            </p>
 
-            <div className="space-y-2">
-              <Label htmlFor="serviceType">Service Type</Label>
-              <Select value={customer.serviceType} onValueChange={(value) => handleChange("serviceType", value)}>
-                <SelectTrigger id="serviceType">
-                  <SelectValue placeholder="Select service type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Basic">Basic</SelectItem>
-                  <SelectItem value="Standard">Standard</SelectItem>
-                  <SelectItem value="Premium">Premium</SelectItem>
-                  <SelectItem value="Custom">Custom</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <ServiceSelection
+              selectedServiceType={customer.serviceType}
+              selectedPackage={customer.servicePackage}
+              onSelectionChange={handleServiceSelection}
+            />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4 space-y-4">
+            <h2 className="font-semibold">Service Schedule</h2>
 
             <div className="space-y-2">
               <Label htmlFor="serviceFrequency">Service Frequency</Label>

@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ServiceSelection } from "@/components/service-selection"
 
 // Mock customer data - in a real app, you would fetch this from your API
 const mockCustomers = [
@@ -42,7 +43,8 @@ const mockCustomers = [
     notes: "Front gate code: 1234. Dog is friendly.",
     serviceFrequency: "Bi-weekly",
     preferredDay: "Friday",
-    serviceType: "Standard",
+    serviceType: "1", // Lawn Mowing
+    servicePackage: "", // No package selected
   },
   {
     id: "2",
@@ -61,7 +63,8 @@ const mockCustomers = [
     notes: "Please text before arrival.",
     serviceFrequency: "Weekly",
     preferredDay: "Monday",
-    serviceType: "Premium",
+    serviceType: "", // No individual service
+    servicePackage: "3", // Complete Garden Care package
   },
 ]
 
@@ -85,6 +88,7 @@ export default function EditCustomerPage({ params }) {
     serviceFrequency: "",
     preferredDay: "",
     serviceType: "",
+    servicePackage: "",
   })
 
   // Fetch customer data
@@ -107,6 +111,22 @@ export default function EditCustomerPage({ params }) {
       ...prev,
       [field]: value,
     }))
+  }
+
+  const handleServiceSelection = (type: "service" | "package", id: string) => {
+    if (type === "service") {
+      setCustomer((prev) => ({
+        ...prev,
+        serviceType: id,
+        servicePackage: "",
+      }))
+    } else {
+      setCustomer((prev) => ({
+        ...prev,
+        serviceType: "",
+        servicePackage: id,
+      }))
+    }
   }
 
   const handleSave = () => {
@@ -276,22 +296,22 @@ export default function EditCustomerPage({ params }) {
 
         <Card>
           <CardContent className="p-4 space-y-4">
-            <h2 className="font-semibold">Service Details</h2>
+            <h2 className="font-semibold">Service Plan</h2>
+            <p className="text-sm text-muted-foreground">
+              Choose either an individual service or a service package for this customer.
+            </p>
 
-            <div className="space-y-2">
-              <Label htmlFor="serviceType">Service Type</Label>
-              <Select value={customer.serviceType} onValueChange={(value) => handleChange("serviceType", value)}>
-                <SelectTrigger id="serviceType">
-                  <SelectValue placeholder="Select service type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Basic">Basic</SelectItem>
-                  <SelectItem value="Standard">Standard</SelectItem>
-                  <SelectItem value="Premium">Premium</SelectItem>
-                  <SelectItem value="Custom">Custom</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <ServiceSelection
+              selectedServiceType={customer.serviceType}
+              selectedPackage={customer.servicePackage}
+              onSelectionChange={handleServiceSelection}
+            />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4 space-y-4">
+            <h2 className="font-semibold">Service Schedule</h2>
 
             <div className="space-y-2">
               <Label htmlFor="serviceFrequency">Service Frequency</Label>

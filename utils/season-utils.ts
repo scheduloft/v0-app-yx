@@ -1,26 +1,26 @@
 import type { Season, ServicePackage } from "@/components/package-form"
 
 export function getCurrentSeason(): Season {
-  const month = new Date().getMonth()
+  const now = new Date()
+  const month = now.getMonth() + 1 // getMonth() returns 0-11, we want 1-12
 
-  // Northern hemisphere seasons
-  if (month >= 2 && month <= 4) return "spring" // March to May
-  if (month >= 5 && month <= 7) return "summer" // June to August
-  if (month >= 8 && month <= 10) return "fall" // September to November
-  return "winter" // December to February
+  if (month >= 3 && month <= 5) return "spring"
+  if (month >= 6 && month <= 8) return "summer"
+  if (month >= 9 && month <= 11) return "fall"
+  return "winter"
 }
 
 export function isPackageInSeason(pkg: ServicePackage): boolean {
-  // If not seasonal, it's always in season
   if (!pkg.isSeasonalOnly) return true
 
-  // Check custom date range
+  const now = new Date()
+
+  // Check custom date range first
   if (pkg.startDate && pkg.endDate) {
-    const now = new Date()
     return now >= pkg.startDate && now <= pkg.endDate
   }
 
-  // Check seasons
+  // Check seasonal availability
   const currentSeason = getCurrentSeason()
   return pkg.availableSeasons.includes(currentSeason)
 }
@@ -36,13 +36,12 @@ export function getSeasonalBadgeColor(season: Season): string {
     case "winter":
       return "bg-blue-100 text-blue-800 hover:bg-blue-200"
     default:
-      return "bg-gray-100 text-gray-800 hover:bg-gray-200"
+      return ""
   }
 }
 
-export function formatDateRange(startDate: Date | null, endDate: Date | null): string {
-  if (!startDate || !endDate) return ""
-
-  const options: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" }
-  return `${startDate.toLocaleDateString(undefined, options)} - ${endDate.toLocaleDateString(undefined, options)}`
+export function formatDateRange(startDate: Date, endDate: Date): string {
+  const start = startDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })
+  const end = endDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })
+  return `${start} - ${end}`
 }
