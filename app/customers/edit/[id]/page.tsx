@@ -136,6 +136,33 @@ export default function EditCustomerPage({ params }) {
       return
     }
 
+    // Track service plan changes
+    const originalCustomer = mockCustomers.find((c) => c.id === id)
+    if (originalCustomer) {
+      const previousServiceType = originalCustomer.serviceType
+      const previousPackage = originalCustomer.servicePackage
+      const newServiceType = customer.serviceType
+      const newPackage = customer.servicePackage
+
+      // Check if service plan changed
+      if (previousServiceType !== newServiceType || previousPackage !== newPackage) {
+        // Import the tracking function at the top of the file
+        const { trackServicePlanChange } = require("@/utils/service-plan-history")
+
+        trackServicePlanChange(
+          customer.id,
+          customer.name,
+          previousServiceType,
+          previousPackage,
+          newServiceType,
+          newPackage,
+          "Customer service plan updated",
+          "Admin",
+          "Service plan changed via customer edit form",
+        )
+      }
+    }
+
     // Simulate saving to API
     console.log("Saving customer:", customer)
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Edit, Calendar, FileText, MapPin, Phone, Mail, Clock, Bell } from "lucide-react"
+import { ArrowLeft, Edit, Calendar, FileText, MapPin, Phone, Mail, Clock, Bell, History } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -10,7 +10,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import NotificationHistoryComponent from "@/components/notification-history"
 import NotificationDetail from "@/components/notification-detail"
+import { ServicePlanHistory } from "@/components/service-plan-history"
 import { getCustomerNotificationPreferences, getCustomerNotificationHistory } from "@/utils/notification-service"
+import { getCustomerServicePlanHistory } from "@/utils/service-plan-history"
 import type { NotificationHistory } from "@/utils/notification-service"
 
 // Mock customer data - in a real app, you would fetch this from your API
@@ -32,7 +34,8 @@ const mockCustomers = [
     notes: "Front gate code: 1234. Dog is friendly.",
     serviceFrequency: "Bi-weekly",
     preferredDay: "Friday",
-    serviceType: "Standard",
+    currentServiceType: "Lawn Maintenance Bundle",
+    currentPrice: 85.0,
     serviceHistory: [
       { date: "June 6, 2025", service: "Lawn Mowing", notes: "Completed on time" },
       {
@@ -69,7 +72,8 @@ const mockCustomers = [
     notes: "Please text before arrival.",
     serviceFrequency: "Weekly",
     preferredDay: "Monday",
-    serviceType: "Premium",
+    currentServiceType: "Complete Garden Care",
+    currentPrice: 100.0,
     serviceHistory: [
       { date: "June 10, 2025", service: "Full Service", notes: "Completed on time" },
       { date: "June 3, 2025", service: "Full Service", notes: "Completed on time" },
@@ -94,6 +98,7 @@ export default function CustomerDetailPage({ params }) {
   const [customer, setCustomer] = useState(null)
   const [notificationPreferences, setNotificationPreferences] = useState(null)
   const [notificationHistory, setNotificationHistory] = useState<NotificationHistory[]>([])
+  const [servicePlanHistory, setServicePlanHistory] = useState([])
   const [selectedNotification, setSelectedNotification] = useState<NotificationHistory | null>(null)
   const [isDetailOpen, setIsDetailOpen] = useState(false)
 
@@ -112,6 +117,10 @@ export default function CustomerDetailPage({ params }) {
         // Get notification history
         const history = getCustomerNotificationHistory(id)
         setNotificationHistory(history)
+
+        // Get service plan history
+        const planHistory = getCustomerServicePlanHistory(id)
+        setServicePlanHistory(planHistory)
       } else {
         // Handle customer not found
         router.push("/customers")
@@ -212,6 +221,23 @@ export default function CustomerDetailPage({ params }) {
               </div>
             </div>
 
+            {/* Current Service Plan */}
+            <div className="mt-4 p-3 bg-muted/50 rounded-md">
+              <h3 className="font-semibold text-sm mb-2">Current Service Plan</h3>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">{customer.currentServiceType}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {customer.serviceFrequency} • {customer.preferredDay}s
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="font-bold text-lg">${customer.currentPrice.toFixed(2)}</p>
+                  <p className="text-xs text-muted-foreground">per service</p>
+                </div>
+              </div>
+            </div>
+
             {customer.notes && (
               <div className="mt-4 p-3 bg-muted/50 rounded-md">
                 <h3 className="font-semibold text-sm mb-1">Notes:</h3>
@@ -233,10 +259,11 @@ export default function CustomerDetailPage({ params }) {
         </Card>
 
         <Tabs defaultValue="upcoming">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
             <TabsTrigger value="history">History</TabsTrigger>
             <TabsTrigger value="invoices">Invoices</TabsTrigger>
+            <TabsTrigger value="plan-history">Plan History</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
           </TabsList>
 
@@ -308,6 +335,14 @@ export default function CustomerDetailPage({ params }) {
             ) : (
               <p className="text-center text-muted-foreground py-4">No invoices available</p>
             )}
+          </TabsContent>
+
+          <TabsContent value="plan-history" className="mt-4">
+            <div className="flex items-center mb-4">
+              <History className="h-5 w-5 mr-2" />
+              <h3 className="font-medium">Service Plan History</h3>
+            </div>
+            <ServicePlanHistory history={servicePlanHistory} />
           </TabsContent>
 
           <TabsContent value="notifications" className="mt-4 space-y-4">
