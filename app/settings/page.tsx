@@ -1,19 +1,20 @@
-import { Bell, ChevronRight, CreditCard, HelpCircle, LogOut, User, Route } from "lucide-react"
+import { Bell, ChevronRight, CreditCard, HelpCircle, LogOut, User, Route, Scissors, Package } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
+import { PageContainer } from "@/components/page-container"
 
 export default function SettingsPage() {
   return (
-    <main className="flex flex-col pb-16">
-      <div className="bg-primary text-primary-foreground p-4">
+    <PageContainer>
+      <div className="bg-primary text-primary-foreground p-4 -mx-4 mb-4">
         <h1 className="text-xl font-bold">Settings</h1>
       </div>
 
-      <div className="p-4 space-y-4">
+      <div className="space-y-4">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle>Account</CardTitle>
@@ -52,6 +53,29 @@ export default function SettingsPage() {
               <div className="flex items-center">
                 <CreditCard className="h-4 w-4 mr-2 text-muted-foreground" />
                 <span>Billing & Subscription</span>
+              </div>
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            </Link>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle>Services & Packages</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Link href="/settings/services" className="flex items-center justify-between py-2">
+              <div className="flex items-center">
+                <Scissors className="h-4 w-4 mr-2 text-muted-foreground" />
+                <span>Service Types</span>
+              </div>
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            </Link>
+            <Separator />
+            <Link href="/settings/packages" className="flex items-center justify-between py-2">
+              <div className="flex items-center">
+                <Package className="h-4 w-4 mr-2 text-muted-foreground" />
+                <span>Service Packages</span>
               </div>
               <ChevronRight className="h-4 w-4 text-muted-foreground" />
             </Link>
@@ -170,6 +194,6 @@ export default function SettingsPage() {
           Sign Out
         </Button>
       </div>
-    </main>
+    </PageContainer>
   )
 }
