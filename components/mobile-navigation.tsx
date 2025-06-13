@@ -59,32 +59,34 @@ export default function MobileNavigation() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border">
-      <nav className="flex justify-around overflow-x-auto">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={cn(
-                "flex flex-col items-center py-3 px-2 text-xs relative",
-                isActive ? "text-primary" : "text-muted-foreground",
-              )}
-            >
-              <item.icon className={cn("h-5 w-5 mb-1", isActive ? "text-primary" : "text-muted-foreground")} />
-              <span className="text-[10px]">{item.name}</span>
-              {item.badge && (
-                <Badge
-                  variant="destructive"
-                  className="absolute -top-1 -right-1 h-4 min-w-4 p-0 flex items-center justify-center text-[10px]"
-                >
-                  {item.badge}
-                </Badge>
-              )}
-            </Link>
-          )
-        })}
-      </nav>
+      <div className="max-w-7xl mx-auto w-full">
+        <nav className="flex justify-around overflow-x-auto">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={cn(
+                  "flex flex-col items-center py-3 px-2 text-xs relative flex-1 text-center",
+                  isActive ? "text-primary" : "text-muted-foreground",
+                )}
+              >
+                <item.icon className={cn("h-5 w-5 mb-1", isActive ? "text-primary" : "text-muted-foreground")} />
+                <span className="text-[10px]">{item.name}</span>
+                {item.badge && (
+                  <Badge
+                    variant="destructive"
+                    className="absolute -top-1 -right-1 h-4 min-w-4 p-0 flex items-center justify-center text-[10px]"
+                  >
+                    {item.badge}
+                  </Badge>
+                )}
+              </Link>
+            )
+          })}
+        </nav>
+      </div>
     </div>
   )
 }

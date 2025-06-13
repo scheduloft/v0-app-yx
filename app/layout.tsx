@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <div className="flex min-h-screen flex-col bg-background max-w-md mx-auto relative">
+          <div className="flex min-h-screen flex-col bg-background w-full relative">
             <div className="flex-1 pb-16">{children}</div>
             <FloatingActionButtons />
             <MobileNavigation />
