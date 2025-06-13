@@ -3,6 +3,7 @@ import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import MobileNavigation from "@/components/mobile-navigation"
 import FloatingActionButtons from "@/components/floating-action-buttons"
+import Sidebar from "@/components/sidebar"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -17,10 +18,13 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <div className="flex min-h-screen flex-col bg-background w-full relative">
-            <div className="flex-1 pb-16">{children}</div>
-            <FloatingActionButtons />
-            <MobileNavigation />
+          <div className="flex min-h-screen bg-background">
+            <Sidebar />
+            <div className="flex-1 flex flex-col min-h-screen relative">
+              <div className="flex-1 pb-16 md:pb-0">{children}</div>
+              <FloatingActionButtons />
+              <MobileNavigation />
+            </div>
           </div>
         </ThemeProvider>
       </body>

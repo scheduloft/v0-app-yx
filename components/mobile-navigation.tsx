@@ -58,7 +58,7 @@ export default function MobileNavigation() {
   ]
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border md:hidden">
       <div className="max-w-7xl mx-auto w-full">
         <nav className="flex justify-around overflow-x-auto">
           {navItems.map((item) => {

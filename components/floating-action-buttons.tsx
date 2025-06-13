@@ -41,9 +41,9 @@ export default function FloatingActionButtons() {
   ]
 
   return (
-    <div className="fixed right-4 bottom-20 z-40 max-w-7xl mx-auto w-full pointer-events-none">
-      <div className="relative w-full max-w-7xl mx-auto">
-        <div className="absolute right-4 bottom-0 pointer-events-auto">
+    <div className="fixed right-4 bottom-20 z-40 pointer-events-none md:hidden">
+      <div className="relative w-full">
+        <div className="absolute right-0 bottom-0 pointer-events-auto">
           <AnimatePresence>
             {isOpen && (
               <div className="flex flex-col-reverse gap-2 mb-2">
