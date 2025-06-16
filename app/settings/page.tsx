@@ -60,7 +60,7 @@ export default function SettingsPage() {
               <ChevronRight className="h-4 w-4 text-muted-foreground" />
             </Link>
             <Separator />
-            <Link href="#" className="flex items-center justify-between py-2">
+            <Link href="/settings/billing" className="flex items-center justify-between py-2">
               <div className="flex items-center">
                 <CreditCard className="h-4 w-4 mr-2 text-muted-foreground" />
                 <span>Billing & Subscription</span>
